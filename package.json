@@ -18,7 +18,7 @@
     "node": "14.15.4",
     "npm": "6.14.11"
   },
-  "lcense": "ISC",
+  "license": "ISC",
   "dependencies": {
     "cors": "=2.8.5",
     "dotenv": "=8.2.0",
