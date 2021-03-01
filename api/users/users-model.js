@@ -1,4 +1,5 @@
 const db = require("../data/db-config");
+const { v4: uuidv4 } = require('uuid');
 
 function find() {
     return db("users");
@@ -12,7 +13,7 @@ function findById(id) {
 }
 
 async function add(newUser) {
-    const [id] = await db("users").insert(newUser, "user_id");
+    const [id] = await db("users").insert({user_id:uuidv4(),...newUser}, "user_id");
     return findById(id);
 }
 module.exports = {

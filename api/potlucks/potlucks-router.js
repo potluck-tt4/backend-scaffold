@@ -10,7 +10,8 @@ router.get("/", restricted, (req, res) => {
         .catch((err) => res.send(err));
 });
 router.post("/",restricted,(req,res)=>{
-    Potlucks.add(req.body)
+    const id = req.decodedToken.id;
+    Potlucks.add({...req.body, user_id:id})
         .then(potluck=>{
             res.status(200).json(potluck)
         }).catch((error)=>{

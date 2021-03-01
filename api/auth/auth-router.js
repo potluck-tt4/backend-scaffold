@@ -35,12 +35,12 @@ router.post("/login", (req, res) => {
     if (isValid(req.body)) {
         Users.findBy({ username: username })
             .then((user) => {
-                console.log(user);
+                console.log(user)
                 if (user && bcryptjs.compareSync(password, user.password)) {
                     const token = createToken(user);
-
+            
                     res.status(200).json({
-                        message: "Welcome" + user.username,
+                        message: "Welcome " + user.username,
                         token,
                     });
                 } else {
@@ -61,7 +61,7 @@ function createToken(user) {
     const payload = {
         subject: user.id,
         username: user.username,
-        department: user.department,
+        id:user.user_id
     };
     const options = {
         expiresIn: "1d",

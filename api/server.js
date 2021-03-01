@@ -13,7 +13,7 @@ server.use(cors());
 
 server.use("/api/auth", AuthRouter);
 server.use("/api/users", UsersRouter);
-server.use("api/potlucks", potluckRouter);
+server.use("/api/potlucks", potluckRouter);
 
 server.use("/", (req, res) => {
     res.status(200).json({ message: `api up. Hello bubblegum.` });

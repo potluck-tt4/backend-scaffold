@@ -14,7 +14,7 @@ exports.up = async (knex) => {
                 .references("user_id")
                 .inTable("users");
             table.string("location", 200).notNullable();
-            table.timestamp("timestamp").notNullable();
+            table.string("timestamp").notNullable();
         })
         .createTable("guests", (table) => {
             table.uuid("guest_id").unique().notNullable();
@@ -43,6 +43,11 @@ exports.up = async (knex) => {
                 .references("guest_id")
                 .inTable("guests");
             table.string("name").notNullable();
+            table
+                .uuid("potluck_id")
+                .notNullable()
+                .references("potluck_id")
+                .inTable("potlucks")
         });
 };
 
