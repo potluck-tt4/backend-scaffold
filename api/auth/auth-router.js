@@ -17,6 +17,7 @@ router.post("/register", (req, res) => {
 
         Users.add(credentials)
             .then((users) => {
+                delete users["password"]; // deletes hashed password from users object
                 res.status(201).json(users);
             })
             .catch((err) => {
@@ -35,10 +36,10 @@ router.post("/login", (req, res) => {
     if (isValid(req.body)) {
         Users.findBy({ username: username })
             .then((user) => {
-                console.log(user)
+                console.log(user);
                 if (user && bcryptjs.compareSync(password, user.password)) {
                     const token = createToken(user);
-            
+
                     res.status(200).json({
                         message: "Welcome " + user.username,
                         token,
@@ -61,7 +62,7 @@ function createToken(user) {
     const payload = {
         subject: user.id,
         username: user.username,
-        id:user.user_id
+        id: user.user_id,
     };
     const options = {
         expiresIn: "1d",

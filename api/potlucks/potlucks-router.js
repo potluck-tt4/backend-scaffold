@@ -20,5 +20,13 @@ router.post("/", restricted, (req, res) => {
             res.status(400).json(error);
         });
 });
+router.get("/guest", restricted, (req, res) => {
+    Potlucks.findGuestByPotluckID(req.body.id)
+        .then((potlucks) => {
+            console.log(potlucks);
+            res.status(200).json(potlucks);
+        })
+        .catch((err) => res.send(err));
+});
 
 module.exports = router;
