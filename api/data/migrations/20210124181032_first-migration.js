@@ -14,6 +14,7 @@ exports.up = async (knex) => {
                 .references("user_id")
                 .inTable("users");
             table.string("location", 200).notNullable();
+            table.string("name", 25).notNullable();
             table.string("timestamp").notNullable();
         })
         .createTable("guests", (table) => {
