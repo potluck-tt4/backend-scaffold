@@ -1,12 +1,55 @@
 exports.up = async (knex) => {
-    await knex.schema.createTable("users", (users) => {
-        users.increments("user_id");
-        users.string("username", 200).notNullable().unique();
-        users.string("password", 200).notNullable();
-        users.timestamps(false, true);
-    });
+    await knex.schema
+        .createTable("users", (table) => {
+            table.uuid("user_id").unique().notNullable();
+            table.string("username", 200).notNullable().unique();
+            table.string("password", 200).notNullable();
+            table.timestamps(false, true);
+        })
+        .createTable("potlucks", (table) => {
+            table.uuid("potluck_id").unique().notNullable();
+            table
+                .uuid("user_id")
+                .notNullable()
+                .references("user_id")
+                .inTable("users");
+            table.string("location", 200).notNullable();
+            table.timestamp("timestamp").notNullable();
+        })
+        .createTable("guests", (table) => {
+            table.uuid("guest_id").unique().notNullable();
+            table
+                .uuid("user_id")
+                .notNullable()
+                .references("user_id")
+                .inTable("users");
+            table
+                .uuid("potluck_id")
+                .notNullable()
+                .references("potluck_id")
+                .inTable("potlucks");
+            table.boolean("accepted").defaultTo(false);
+        })
+        .createTable("items", (table) => {
+            table.uuid("item_id").unique().notNullable();
+            table
+                .uuid("user_id")
+                .notNullable()
+                .references("user_id")
+                .inTable("users");
+            table
+                .uuid("guest_id")
+                .notNullable()
+                .references("guest_id")
+                .inTable("guests");
+            table.string("name").notNullable();
+        });
 };
 
 exports.down = async (knex) => {
-    await knex.schema.dropTableIfExists("users");
+    await knex.schema
+        .dropTableIfExists("items")
+        .dropTableIfExists("guests")
+        .dropTableIfExists("potlucks")
+        .dropTableIfExists("users");
 };
