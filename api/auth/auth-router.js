@@ -16,9 +16,12 @@ router.post("/register", (req, res) => {
         credentials.password = hash;
 
         Users.add(credentials)
-            .then((users) => {
-                delete users["password"]; // deletes hashed password from users object
-                res.status(201).json(users);
+            .then((user) => {
+                delete user["password"]; // deletes hashed password from users object
+                delete user["created_at"];
+                delete user["updated_at"];
+                const token = createToken(user);
+                res.status(201).json({ ...user, token });
             })
             .catch((err) => {
                 res.status(500).json({ message: err.message });
