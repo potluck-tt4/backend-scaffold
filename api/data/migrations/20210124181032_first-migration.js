@@ -42,12 +42,12 @@ exports.up = async (knex) => {
                 .notNullable()
                 .references("guest_id")
                 .inTable("guests");
-            table.string("name").notNullable();
             table
                 .uuid("potluck_id")
                 .notNullable()
                 .references("potluck_id")
-                .inTable("potlucks")
+                .inTable("potlucks");
+            table.string("name").notNullable();
         });
 };
 

@@ -10,8 +10,7 @@ module.exports = (req, res, next) => {
             if (err) {
                 res.status(401).json("invalid token");
             } else {
-                req.decodedToken = decoded;
-                console.log(req.decodedToken)
+                req.decodedToken = decoded; //req.decodedToken.id to reach authorized user`s ID
                 next();
             }
         });
