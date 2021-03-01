@@ -118,3 +118,9 @@ dist
 
 .DS_Store
 *.db3
+
+# environment
+.env
+
+#notes
+.notes
