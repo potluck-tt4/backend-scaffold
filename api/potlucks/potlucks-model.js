@@ -39,9 +39,19 @@ function findPotlucksByUserId(id) {
     return db("potlucks").where({ user_id: id });
 }
 
+async function updateTime(id, changes){
+    //grab the right potluck
+    const potluck = await db("potlucks as p")
+    .select("p.location", "p.timestamp", "p.potluck_id", "p.user_id")
+    .where("p.potluck_id", id)
+    .update(changes,"p.location","p.timestamp");
+     console.log("after changes",potluck)
+}
+
 module.exports = {
     add,
     findById,
     findPotlucksByUserId,
     find,
+    updateTime
 };
