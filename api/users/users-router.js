@@ -5,7 +5,26 @@ const restricted = require("../middleware/restricted"); // a middleware for vali
 router.get("/", restricted, (req, res) => {
     Users.find()
         .then((users) => {
+            users.forEach((user) => {
+                delete user["password"];
+            });
             res.status(200).json(users);
+        })
+        .catch((err) => res.send(err));
+});
+
+router.get("/potlucks", restricted, (req, res) => {
+    Users.findPotlucksByUserId(req.decodedToken.id)
+        .then((potlucks) => {
+            res.status(200).json(potlucks);
+        })
+        .catch((err) => res.send(err));
+});
+
+router.post("/potlucks", restricted, (req, res) => {
+    Users.addPotluck(req.body, req.decodedToken.id)
+        .then((potluck) => {
+            res.status(200).json(potluck);
         })
         .catch((err) => res.send(err));
 });
