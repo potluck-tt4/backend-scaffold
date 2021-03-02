@@ -14,12 +14,13 @@
 | PUT    | `/potlucks/:id`        | `{ location, timestamp, name }` | `{ location, timestamp, potluck_id, user_id, name, [guests], [items] }` |
 | POST   | `/potlucks/:id/guest`  | `{ user_id }`                   | `[{ guests }]`                                                          |
 | POST   | `/potlucks/:id/item`   | `{ item_name }`                 | `[{ items }]`                                                           |
-| PUT    | `/potlucks/:id/item`   | `{ item_id, user_id }`          | `{ item }`                                                              |
+| PUT    | `/potlucks/:id/item`   | `{ item_id }`                   | `{ item }`                                                              |
 | POST   | `/potlucks/:id/accept` | -                               | `{ location, timestamp, potluck_id, user_id, [guests], [items] }`       |
 
 ## User
 
-| Method | Endpoint          | Request Body                    | Returns                                        |
-| ------ | ----------------- | ------------------------------- | ---------------------------------------------- |
-| POST   | `/users/potlucks` | `{ location, timestamp, name }` | `{ user_id, potluck_id, timestamp, location }` |
-| GET    | `/users/potlucks` | -                               | `[{ potluck_id, name }]`                       |
+| Method | Endpoint                   | Request Body                    | Returns                                        |
+| ------ | -------------------------- | ------------------------------- | ---------------------------------------------- |
+| POST   | `/users/potlucks`          | `{ location, timestamp, name }` | `{ user_id, potluck_id, timestamp, location }` |
+| GET    | `/users/potlucks`          | -                               | `[{ potluck_id, name }]`                       |
+| POST   | `/users/potlucks/:id/item` | `{item_id}`                     | `{item_id, potluck_id, name}`                  |
