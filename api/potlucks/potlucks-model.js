@@ -1,21 +1,29 @@
 const db = require("../data/db-config");
 const { v4: uuidv4 } = require("uuid");
 
+function find() {
+    return db("potlucks");
+}
+
 async function findById(id) {
-    return (
-        db("potlucks as p")
-            // .leftJoin("items as i", "i.potluck_id", "p.potluck_id")
-            .join("users as u", "u.user_id", "p.user_id")
-            .leftJoin("guests as g", "g.potluck_id", "p.potluck_id")
-            .select(
-                "p.location",
-                "p.timestamp",
-                "p.potluck_id",
-                "p.user_id",
-                "g.accepted"
-            )
-            .where("p.potluck_id", id)
-    );
+    const potluck = await db("potlucks as p")
+        .select("p.location", "p.timestamp", "p.potluck_id", "p.user_id")
+        .where("p.potluck_id", id);
+
+    const guests = await db("guests")
+        .select("guest_id", "accepted")
+        .where("potluck_id", id);
+
+    const items = await db("items as i")
+        .join("users as u", "u.user_id", "i.user_id")
+        .select(
+            "i.item_id",
+            "i.user_id",
+            "i.name",
+            "i.potluck_id",
+            "u.username"
+        );
+    return { ...potluck, guests: guests, items: items };
 }
 
 async function add(newPotluck) {
@@ -27,7 +35,13 @@ async function add(newPotluck) {
     return findById(id);
 }
 
+function findPotlucksByUserId(id) {
+    return db("potlucks").where({ user_id: id });
+}
+
 module.exports = {
     add,
     findById,
+    findPotlucksByUserId,
+    find,
 };

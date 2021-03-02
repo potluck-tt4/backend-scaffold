@@ -7,6 +7,8 @@ router.get("/", restricted, (req, res) => {
         .then((users) => {
             users.forEach((user) => {
                 delete user["password"];
+                delete user["created_at"];
+                delete user["updated_at"];
             });
             res.status(200).json(users);
         })
@@ -22,7 +24,7 @@ router.get("/potlucks", restricted, (req, res) => {
 });
 
 router.post("/potlucks", restricted, (req, res) => {
-    Users.addPotluck(req.body, req.decodedToken.id)
+    Users.addPotluck({ ...req.body, user_id: req.decodedToken.id })
         .then((potluck) => {
             res.status(200).json(potluck);
         })
