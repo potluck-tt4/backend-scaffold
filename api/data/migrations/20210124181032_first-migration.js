@@ -35,10 +35,8 @@ exports.up = async (knex) => {
             table.uuid("item_id").unique().notNullable();
             table
                 .uuid("user_id")
-                .notNullable()
                 .references("user_id")
                 .inTable("users");
-            table.uuid("guest_id").references("guest_id").inTable("guests");
             table
                 .uuid("potluck_id")
                 .notNullable()

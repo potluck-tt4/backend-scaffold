@@ -15,8 +15,8 @@ async function findById(id) {
     .where("potluck_id", id);
 
   const items = await db("items as i")
-    .join("users as u", "u.user_id", "i.user_id")
-    .select("i.item_id", "i.user_id", "i.name", "i.potluck_id", "u.username");
+    .select("i.item_id", "i.user_id", "i.name", "i.potluck_id")
+    .where("i.potluck_id",id);
   return { ...potluck, guests: guests, items: items };
 }
 
@@ -51,10 +51,12 @@ async function updateTime(id, changes) {
   const potluck = await db("potlucks as p")
     .select("p.location", "p.timestamp", "p.potluck_id", "p.user_id")
     .where("p.potluck_id", id)
-    .update(changes, "p.location", "p.timestamp");
+    .update(changes, ["p.location", "p.timestamp","p.name"]);
+    return potluck;
 }
 
 async function updateAccepted(id) {
+  //can use filter instead of guest_id
   const guest = db("guests as g")
     .select("g.guest_id", "g.accepted")
     .where("g.guest_id", id)
@@ -64,15 +66,17 @@ async function updateAccepted(id) {
     });
   return guest;
 }
-async function addItem(id, name,potluckId) {
+async function fetchItems(potluckId){
+  return db("items as i").where("i.potluck_id",potluckId)
+}
+async function addItem(id, name, potluckId) {
   const [newItem] = await db("items as i")
     .where("i.potluck_id", id)
     .insert(
       {
         ...name,
         potluck_id:potluckId,
-        user_id:id,
-        guest_id:"226df565-f708-4c94-af3e-191653c77484",
+        user_id:null,
         item_id: uuidv4(),
       },
       "item_id","name"
@@ -96,5 +100,6 @@ module.exports = {
   addGuest,
   updateAccepted,
   addItem,
-  updateItem
+  updateItem,
+  fetchItems
 };

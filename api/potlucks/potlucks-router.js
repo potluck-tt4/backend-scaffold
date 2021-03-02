@@ -75,7 +75,14 @@ router.post("/:id/guest", restricted, (req, res) => {
 router.post("/:id/accept", (req, res) => {
   //guest accepts invitation
 });
-
+router.get("/:id/item",(req,res)=>{
+  Potlucks.fetchItems(req.params.id)
+    .then((items)=>{
+      res.status(200).json(items)
+    }).catch((error)=>{
+      res.status(400).json(error)
+    })
+})
 router.post("/:id/item",restricted, (req, res) => {
   //adds an item
   const user_id = req.decodedToken.id;
