@@ -79,6 +79,13 @@ async function addItem(id, name,potluckId) {
     );
   return newItem;
 }
+async function updateItem(id,changes){
+  const item = await db("items as i")
+    .select("i.name")
+    .where("i.item_id",id)
+    .update(changes,"i.name");
+    return item;
+}
 
 module.exports = {
   add,
@@ -89,4 +96,5 @@ module.exports = {
   addGuest,
   updateAccepted,
   addItem,
+  updateItem
 };

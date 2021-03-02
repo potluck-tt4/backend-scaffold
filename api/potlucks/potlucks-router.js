@@ -92,6 +92,14 @@ router.post("/:id/item",restricted, (req, res) => {
 
 router.put("/:id/item", (req, res) => {
   //updates an item
+  const changes = req.body;
+  const id = req.body.item_id;
+  Potlucks.updateItem(id,changes)
+    .then((item)=>{
+      res.status(200).json(item)
+    }).catch((error)=>{
+      res.status(400).json(error)
+    })
 });
 
 module.exports = router;
