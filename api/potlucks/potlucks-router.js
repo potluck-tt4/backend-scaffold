@@ -72,8 +72,13 @@ router.post("/:id/guest", restricted, (req, res) => {
     })
 });
 
-router.post("/:id/accept", (req, res) => {
-  //guest accepts invitation
+router.put("/:id/accept",restricted, (req, res) => {
+  Potlucks.updateAccepted(req.decodedToken.id,req.params.id)
+    .then((guestObject)=>{
+      res.status(200).json(guestObject)
+    }).catch((error)=>{
+      res.status(400).json(error)
+    })
 });
 router.get("/:id/item",(req,res)=>{
   Potlucks.fetchItems(req.params.id)

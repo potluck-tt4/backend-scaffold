@@ -9,7 +9,7 @@ function findBy(filter) {
     return db("users").where(filter).first();
 }
 
-function findById(id) {
+function findByUserId(id) {
     return db("users").where({ user_id: id }).first();
 }
 
@@ -18,7 +18,7 @@ async function add(newUser) {
         { user_id: uuidv4(), ...newUser },
         "user_id"
     );
-    return findById(id);
+    return findByUserId(id);
 }
 
 async function addPotluck(potluck) {
@@ -32,7 +32,7 @@ module.exports = {
     add,
     find,
     findBy,
-    findById,
+    findByUserId,
     addPotluck,
     findPotlucksByUserId,
 };

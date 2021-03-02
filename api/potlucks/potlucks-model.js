@@ -1,5 +1,6 @@
 const db = require("../data/db-config");
 const { v4: uuidv4 } = require("uuid");
+const User = require("../users/users-model");
 
 function find() {
   return db("potlucks");
@@ -16,7 +17,7 @@ async function findById(id) {
 
   const items = await db("items as i")
     .select("i.item_id", "i.user_id", "i.name", "i.potluck_id")
-    .where("i.potluck_id",id);
+    .where("i.potluck_id", id);
   return { ...potluck, guests: guests, items: items };
 }
 
@@ -43,6 +44,7 @@ async function addGuest(userId, newGuest, potluckId) {
     },
     "guest_id"
   );
+  // const userData = await User.findByUserId(newGuest);
   return { guest_id: addedGuest };
 }
 
@@ -51,23 +53,20 @@ async function updateTime(id, changes) {
   const potluck = await db("potlucks as p")
     .select("p.location", "p.timestamp", "p.potluck_id", "p.user_id")
     .where("p.potluck_id", id)
-    .update(changes, ["p.location", "p.timestamp","p.name"]);
-    return potluck;
+    .update(changes, ["p.location", "p.timestamp", "p.name"]);
+  return potluck;
 }
 
-async function updateAccepted(id) {
+async function updateAccepted(userId, potluckId) {
   //can use filter instead of guest_id
-  const guest = db("guests as g")
-    .select("g.guest_id", "g.accepted")
-    .where("g.guest_id", id)
-    .update({
-      ...guest,
-      accepted: !guests.accepted,
-    });
-  return guest;
+  const userAccepted = await db("guests")
+    .where("user_id", userId)
+    .andWhere("potluck_id", potluckId)
+    .update({accepted:true},"potluck_id");
+    return userAccepted;
 }
-async function fetchItems(potluckId){
-  return db("items as i").where("i.potluck_id",potluckId)
+async function fetchItems(potluckId) {
+  return db("items as i").where("i.potluck_id", potluckId);
 }
 async function addItem(id, name, potluckId) {
   const [newItem] = await db("items as i")
@@ -75,20 +74,21 @@ async function addItem(id, name, potluckId) {
     .insert(
       {
         ...name,
-        potluck_id:potluckId,
-        user_id:null,
+        potluck_id: potluckId,
+        user_id: null,
         item_id: uuidv4(),
       },
-      "item_id","name"
+      "item_id",
+      "name"
     );
   return newItem;
 }
-async function updateItem(id,changes){
+async function updateItem(id, changes) {
   const item = await db("items as i")
     .select("i.name")
-    .where("i.item_id",id)
-    .update(changes,"i.name");
-    return item;
+    .where("i.item_id", id)
+    .update(changes, ["i.name", "i.item_id", "i.user_id", "i.potluck_id"]);
+  return item;
 }
 
 module.exports = {
@@ -101,5 +101,5 @@ module.exports = {
   updateAccepted,
   addItem,
   updateItem,
-  fetchItems
+  fetchItems,
 };
