@@ -34,6 +34,14 @@ router.get("/:id", restricted, (req, res) => {
 
 router.put("/:id", restricted, (req, res) => {
     //change location and time of potluck
+    const changes = req.body;
+    const id = req.params.id
+    Potlucks.updateTime(id,changes)
+        .then(potluck=>{
+            res.status(200).json(potluck)
+        }).catch(error=>{
+            res.status(400).json(error)
+        })
 });
 
 router.post("/:id/guest", restricted, (req, res) => {
