@@ -28,6 +28,13 @@ async function addPotluck(potluck) {
 function findPotlucksByUserId(id) {
     return db("potlucks").where({ user_id: id });
 }
+
+function findInvitationsByUserId(userId) {
+    return db("potlucks as p")
+        .join("guests as g", "p.potluck_id", "g.potluck_id")
+        .where("g.user_id", userId);
+}
+
 module.exports = {
     add,
     find,
@@ -35,4 +42,5 @@ module.exports = {
     findByUserId,
     addPotluck,
     findPotlucksByUserId,
+    findInvitationsByUserId,
 };
